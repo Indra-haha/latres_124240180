@@ -16,7 +16,7 @@ Aplikasi mobile Harry Potter dengan fitur autentikasi (SharedPreferences), peman
     - Username: `potter` | Password: `gryffindor`
 - **Session Management:** Status login dan username disimpan ke `SharedPreferences`.
 - **Auto-Login:** Saat aplikasi dibuka, jika session login masih tersimpan, langsung diarahkan ke halaman Karakter.
-- **SnackBar Notifikasi:** Menampilkan SnackBar saat login berhasil atau gagal.
+- **SnackBar Notifikasi (Top Position):** Menampilkan SnackBar floating di bagian atas layar (dengan swipe-to-dismiss ke atas) saat login berhasil atau gagal.
 - **Navigasi:** Masuk ke Character View saat login sukses.
 
 ### 2. Halaman Character View & Detail Character (20 pts)
@@ -37,7 +37,7 @@ Aplikasi mobile Harry Potter dengan fitur autentikasi (SharedPreferences), peman
 ### 3. Halaman Spells View (20 pts)
 - **Data dari API:** Mengambil data mantra/sihir dari endpoint `https://potterapi-fedeperin.vercel.app/en/spells`.
 - **Tombol Favorit:** Tombol favorite dapat di-toggle untuk menambahkan atau menghapus mantra dari Hive Box.
-- **SnackBar Feedback:** Menampilkan SnackBar konfirmasi saat mantra berhasil ditambahkan atau dihapus dari favorit.
+- **SnackBar Feedback (Top Position):** Menampilkan SnackBar konfirmasi di bagian atas layar saat mantra berhasil ditambahkan atau dihapus dari favorit.
 - **Navigasi Favorite:** Terdapat tombol navigasi pada AppBar menuju halaman **Favorite Spells View**.
 
 ### 4. Halaman Favorite Spells View (20 pts)
@@ -47,7 +47,7 @@ Aplikasi mobile Harry Potter dengan fitur autentikasi (SharedPreferences), peman
 
 ### 5. Logout (20 pts)
 - **Tombol Logout:** Tersedia di AppBar halaman Karakter dan Sihir (Spells).
-- **Dialog Konfirmasi & SnackBar:** Konfirmasi sebelum logout, menghapus session `SharedPreferences`, kembali ke Login View, dan menampilkan SnackBar "Berhasil logout".
+- **Dialog Konfirmasi & SnackBar (Top Position):** Konfirmasi sebelum logout, menghapus session `SharedPreferences`, kembali ke Login View, dan menampilkan SnackBar floating di atas layar "Berhasil logout".
 
 ---
 
@@ -64,6 +64,8 @@ lib/
 │   ├── auth_service.dart
 │   ├── hive_service.dart
 │   └── notification_service.dart
+├── widgets/
+│   └── top_snackbar.dart
 └── views/
     ├── login_view.dart
     ├── main_navigation_view.dart

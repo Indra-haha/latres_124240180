@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import '../widgets/top_snackbar.dart';
 import 'main_navigation_view.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  final String? logoutMessage;
+
+  const LoginView({super.key, this.logoutMessage});
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -17,6 +20,29 @@ class _LoginViewState extends State<LoginView> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.logoutMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        showTopSnackBar(
+          context,
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.white),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(widget.logoutMessage!),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.blueGrey.shade800,
+        );
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
@@ -24,6 +50,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Future<void> _handleLogin() async {
+    if (_isLoading) return;
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -46,41 +73,29 @@ class _LoginViewState extends State<LoginView> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 10),
-              Text('Login berhasil! Selamat datang, $username'),
-            ],
-          ),
-          backgroundColor: Colors.green.shade700,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      ScaffoldMessenger.of(context).clearSnackBars();
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const MainNavigationView()),
+        MaterialPageRoute(
+          builder: (context) => MainNavigationView(
+            welcomeMessage: 'Login berhasil! Selamat datang, $username',
+          ),
+        ),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Row(
-            children: [
-              Icon(Icons.error_outline, color: Colors.white),
-              SizedBox(width: 10),
-              Text('Login gagal! Username atau password salah.'),
-            ],
-          ),
-          backgroundColor: Colors.red.shade700,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          duration: const Duration(seconds: 2),
+      showTopSnackBar(
+        context,
+        content: const Row(
+          children: [
+            Icon(Icons.error_outline, color: Colors.white),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text('Login gagal! Username atau password salah.'),
+            ),
+          ],
         ),
+        backgroundColor: Colors.red.shade700,
       );
     }
   }

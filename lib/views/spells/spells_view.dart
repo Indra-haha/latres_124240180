@@ -4,6 +4,7 @@ import '../../models/spell_model.dart';
 import '../../services/api_service.dart';
 import '../../services/auth_service.dart';
 import '../../services/hive_service.dart';
+import '../../widgets/top_snackbar.dart';
 import '../login_view.dart';
 import 'favorite_spells_view.dart';
 
@@ -58,43 +59,35 @@ class _SpellsViewState extends State<SpellsView> {
     if (isFav) {
       await HiveService.removeFavorite(spell.index);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.favorite_border, color: Colors.white),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text('Spell "${spell.spell}" dihapus dari favorit!'),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.orange.shade800,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            duration: const Duration(seconds: 2),
+        showTopSnackBar(
+          context,
+          content: Row(
+            children: [
+              const Icon(Icons.favorite_border, color: Colors.white),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text('Spell "${spell.spell}" dihapus dari favorit!'),
+              ),
+            ],
           ),
+          backgroundColor: Colors.red.shade700,
         );
       }
     } else {
       await HiveService.addFavorite(spell);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.favorite, color: Colors.white),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text('Spell "${spell.spell}" ditambahkan ke favorit!'),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.green.shade700,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            duration: const Duration(seconds: 2),
+        showTopSnackBar(
+          context,
+          content: Row(
+            children: [
+              const Icon(Icons.favorite, color: Colors.white),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text('Spell "${spell.spell}" ditambahkan ke favorit!'),
+              ),
+            ],
           ),
+          backgroundColor: Colors.green.shade700,
         );
       }
     }
@@ -113,7 +106,10 @@ class _SpellsViewState extends State<SpellsView> {
           children: [
             Icon(Icons.logout, color: Color(0xFFD3A625)),
             SizedBox(width: 8),
-            Text('Konfirmasi Logout', style: TextStyle(color: Colors.white, fontSize: 18)),
+            Text(
+              'Konfirmasi Logout',
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
           ],
         ),
         content: const Text(
@@ -131,7 +127,10 @@ class _SpellsViewState extends State<SpellsView> {
               foregroundColor: const Color(0xFF1A1A2E),
             ),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Logout',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -142,24 +141,13 @@ class _SpellsViewState extends State<SpellsView> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.white),
-              SizedBox(width: 10),
-              Text('Berhasil logout'),
-            ],
-          ),
-          backgroundColor: Colors.blueGrey.shade800,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      ScaffoldMessenger.of(context).clearSnackBars();
 
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoginView()),
+        MaterialPageRoute(
+          builder: (context) =>
+              const LoginView(logoutMessage: 'Berhasil logout'),
+        ),
         (route) => false,
       );
     }
@@ -188,19 +176,6 @@ class _SpellsViewState extends State<SpellsView> {
         foregroundColor: Colors.white,
         elevation: 2,
         actions: [
-          // Navigasi ke Halaman Favorite Spell
-          IconButton(
-            icon: const Icon(Icons.bookmark, color: Color(0xFFD3A625)),
-            tooltip: 'Halaman Favorite Spells',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const FavoriteSpellsView(),
-                ),
-              );
-            },
-          ),
           // Tombol Logout
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
@@ -208,6 +183,16 @@ class _SpellsViewState extends State<SpellsView> {
             onPressed: _handleLogout,
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const FavoriteSpellsView()),
+          );
+        },
+        backgroundColor: const Color(0xFFD3A625),
+        child: const Icon(Icons.bookmark, color: Color(0xFF1F1E33)),
       ),
       body: Column(
         children: [
@@ -225,7 +210,11 @@ class _SpellsViewState extends State<SpellsView> {
                 prefixIcon: const Icon(Icons.search, color: Color(0xFFD3A625)),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.white54, size: 18),
+                        icon: const Icon(
+                          Icons.clear,
+                          color: Colors.white54,
+                          size: 18,
+                        ),
                         onPressed: () {
                           _searchController.clear();
                           _applyFilter();
@@ -234,10 +223,15 @@ class _SpellsViewState extends State<SpellsView> {
                     : null,
                 filled: true,
                 fillColor: const Color(0xFF26253F),
-                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 0,
+                  horizontal: 16,
+                ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+                  borderSide: BorderSide(
+                    color: Colors.white.withValues(alpha: 0.1),
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -275,7 +269,11 @@ class _SpellsViewState extends State<SpellsView> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.cloud_off, size: 64, color: Colors.redAccent),
+                          const Icon(
+                            Icons.cloud_off,
+                            size: 64,
+                            color: Colors.redAccent,
+                          ),
                           const SizedBox(height: 16),
                           Text(
                             'Gagal memuat data:\n${snapshot.error}',
@@ -330,7 +328,9 @@ class _SpellsViewState extends State<SpellsView> {
                               borderRadius: BorderRadius.circular(14),
                               side: BorderSide(
                                 color: isFav
-                                    ? const Color(0xFFD3A625).withValues(alpha: 0.5)
+                                    ? const Color(
+                                        0xFFD3A625,
+                                      ).withValues(alpha: 0.5)
                                     : Colors.white.withValues(alpha: 0.08),
                               ),
                             ),
@@ -345,8 +345,12 @@ class _SpellsViewState extends State<SpellsView> {
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color: isFav
-                                          ? const Color(0xFFD3A625).withValues(alpha: 0.2)
-                                          : Colors.white.withValues(alpha: 0.06),
+                                          ? const Color(
+                                              0xFFD3A625,
+                                            ).withValues(alpha: 0.2)
+                                          : Colors.white.withValues(
+                                              alpha: 0.06,
+                                            ),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Icon(
@@ -362,7 +366,8 @@ class _SpellsViewState extends State<SpellsView> {
                                   // Spell Info
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           spell.spell,
@@ -391,8 +396,12 @@ class _SpellsViewState extends State<SpellsView> {
                                             vertical: 2,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withValues(alpha: 0.06),
-                                            borderRadius: BorderRadius.circular(6),
+                                            color: Colors.white.withValues(
+                                              alpha: 0.06,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              6,
+                                            ),
                                           ),
                                           child: Text(
                                             '#${spell.index}',
@@ -410,8 +419,12 @@ class _SpellsViewState extends State<SpellsView> {
                                   // Favorite Button (Toggle)
                                   IconButton(
                                     icon: Icon(
-                                      isFav ? Icons.favorite : Icons.favorite_border,
-                                      color: isFav ? Colors.redAccent : Colors.white54,
+                                      isFav
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: isFav
+                                          ? Colors.redAccent
+                                          : Colors.white54,
                                       size: 26,
                                     ),
                                     tooltip: isFav

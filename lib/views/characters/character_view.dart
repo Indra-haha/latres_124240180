@@ -115,24 +115,12 @@ class _CharacterViewState extends State<CharacterView> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.white),
-              SizedBox(width: 10),
-              Text('Berhasil logout'),
-            ],
-          ),
-          backgroundColor: Colors.blueGrey.shade800,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      ScaffoldMessenger.of(context).clearSnackBars();
 
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoginView()),
+        MaterialPageRoute(
+          builder: (context) => const LoginView(logoutMessage: 'Berhasil logout'),
+        ),
         (route) => false,
       );
     }

@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../models/spell_model.dart';
 import '../../services/hive_service.dart';
 import '../../services/notification_service.dart';
+import '../../widgets/top_snackbar.dart';
 
 class FavoriteSpellsView extends StatelessWidget {
   const FavoriteSpellsView({super.key});
@@ -19,22 +20,18 @@ class FavoriteSpellsView extends StatelessWidget {
 
     // 3. Show SnackBar
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.delete_outline, color: Colors.white),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text('Spell "${spell.spell}" dihapus dari favorit.'),
-              ),
-            ],
-          ),
-          backgroundColor: Colors.redAccent.shade700,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          duration: const Duration(seconds: 2),
+      showTopSnackBar(
+        context,
+        content: Row(
+          children: [
+            const Icon(Icons.delete_outline, color: Colors.white),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text('Spell "${spell.spell}" dihapus dari favorit.'),
+            ),
+          ],
         ),
+        backgroundColor: Colors.red.shade700,
       );
     }
   }

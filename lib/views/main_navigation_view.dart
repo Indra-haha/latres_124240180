@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import '../widgets/top_snackbar.dart';
 import 'characters/character_view.dart';
 import 'spells/spells_view.dart';
 
 class MainNavigationView extends StatefulWidget {
-  const MainNavigationView({super.key});
+  final String? welcomeMessage;
+
+  const MainNavigationView({super.key, this.welcomeMessage});
 
   @override
   State<MainNavigationView> createState() => _MainNavigationViewState();
@@ -16,6 +19,29 @@ class _MainNavigationViewState extends State<MainNavigationView> {
     CharacterView(),
     SpellsView(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.welcomeMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        showTopSnackBar(
+          context,
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.white),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(widget.welcomeMessage!),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green.shade700,
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
