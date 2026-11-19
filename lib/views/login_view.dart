@@ -315,7 +315,7 @@ class _LoginViewState extends State<LoginView> {
                               ),
                               SizedBox(height: 4),
                               Text(
-                                '• admin / admin\n• 124240180 / 124240180',
+                                '• 124240180 / 124240180',
                                 style: TextStyle(
                                   color: Colors.white70,
                                   fontSize: 12,

@@ -11,9 +11,7 @@ Aplikasi mobile Harry Potter dengan fitur autentikasi (SharedPreferences), peman
 ### 1. Halaman Login View (20 pts)
 - **Hardcoded Login:** Logika validasi username dan password.
   - Akun demo:
-    - Username: `admin` | Password: `admin`
-    - Username: `124240180` | Password: `124240180` (atau `admin`)
-    - Username: `potter` | Password: `gryffindor`
+    - Username: `124240180` | Password: `124240180`
 - **Session Management:** Status login dan username disimpan ke `SharedPreferences`.
 - **Auto-Login:** Saat aplikasi dibuka, jika session login masih tersimpan, langsung diarahkan ke halaman Karakter.
 - **SnackBar Notifikasi (Top Position):** Menampilkan SnackBar floating di bagian atas layar (dengan swipe-to-dismiss ke atas) saat login berhasil atau gagal.

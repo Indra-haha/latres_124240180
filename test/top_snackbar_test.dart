@@ -65,14 +65,14 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: MainNavigationView(
-            welcomeMessage: 'Login berhasil! Selamat datang, admin',
+            welcomeMessage: 'Login berhasil! Selamat datang, 124240180',
           ),
         ),
       );
 
       await tester.pumpAndSettle();
 
-      final snackBarFinder = find.text('Login berhasil! Selamat datang, admin');
+      final snackBarFinder = find.text('Login berhasil! Selamat datang, 124240180');
       expect(snackBarFinder, findsOneWidget);
 
       final snackBarWidget = tester.widget<SnackBar>(find.byType(SnackBar));

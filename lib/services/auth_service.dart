@@ -4,29 +4,17 @@ class AuthService {
   static const String _keyIsLoggedIn = 'is_logged_in';
   static const String _keyUsername = 'username';
 
-  // Hardcoded valid credentials:
-  // 1) admin / admin
-  // 2) 124240180 / 124240180 (or admin)
-  // 3) potter / gryffindor
+
   static const Map<String, String> _validUsers = {
-    'admin': 'admin',
     '124240180': '124240180',
-    'potter': 'gryffindor',
   };
 
   /// Validates credentials against hardcoded user store
   static bool validateCredentials(String username, String password) {
     final trimmedUsername = username.trim();
-
-    // Student NIM can use either NIM or admin as password
-    if (trimmedUsername == '124240180') {
-      return password == '124240180' || password == 'admin';
-    }
-
     if (_validUsers.containsKey(trimmedUsername)) {
       return _validUsers[trimmedUsername] == password;
     }
-
     return false;
   }
 

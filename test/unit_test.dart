@@ -6,13 +6,14 @@ import 'package:latres_124240180/services/auth_service.dart';
 void main() {
   group('AuthService Tests', () {
     test('Valid credentials should pass', () {
-      expect(AuthService.validateCredentials('admin', 'admin'), isTrue);
       expect(AuthService.validateCredentials('124240180', '124240180'), isTrue);
-      expect(AuthService.validateCredentials('124240180', 'admin'), isTrue);
-      expect(AuthService.validateCredentials('potter', 'gryffindor'), isTrue);
     });
 
     test('Invalid credentials should fail', () {
+      expect(AuthService.validateCredentials('admin', 'admin'), isFalse);
+      expect(AuthService.validateCredentials('124240180', 'admin'), isFalse);
+      expect(AuthService.validateCredentials('124240180', 'wrongpass'), isFalse);
+      expect(AuthService.validateCredentials('potter', 'gryffindor'), isFalse);
       expect(AuthService.validateCredentials('admin', 'wrongpass'), isFalse);
       expect(AuthService.validateCredentials('nonexistent', '123'), isFalse);
       expect(AuthService.validateCredentials('', ''), isFalse);
