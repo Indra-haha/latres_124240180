@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
-  static final FlutterLocalNotificationsPlugin _notificationsPlugin =
+  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   static Future<void> init() async {
@@ -16,65 +15,45 @@ class NotificationService {
       requestSoundPermission: true,
     );
 
-    const WindowsInitializationSettings windowsInitializationSettings =
-        WindowsInitializationSettings(
-      appName: 'latres_124240180',
-      appUserModelId: 'com.example.latres_124240180',
-      guid: '3200b2b8-93f8-4e1a-8e2b-fca2a04e5488',
-    );
-
     const InitializationSettings initializationSettings =
         InitializationSettings(
       android: androidInitializationSettings,
       iOS: iosInitializationSettings,
-      windows: windowsInitializationSettings,
     );
 
-    await _notificationsPlugin.initialize(
+    await flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        debugPrint('Notification clicked with payload: ${response.payload}');
-      },
     );
 
-    // Request Android 13+ notification permissions
-    final androidImplementation = _notificationsPlugin
+    // Minta izin notifikasi untuk Android 13+
+    await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
-    if (androidImplementation != null) {
-      await androidImplementation.requestNotificationsPermission();
-    }
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
   }
 
   static Future<void> showImmediateNotification({
     required String title,
     required String body,
   }) async {
-    const AndroidNotificationDetails androidNotificationDetails =
+    const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
-      'favorite_spells_channel',
-      'Favorite Spells',
-      channelDescription:
-          'Notification channel for favorite spells management',
+      'channel_id',
+      'channel_name',
       importance: Importance.max,
       priority: Priority.high,
-      ticker: 'ticker',
-      icon: '@mipmap/ic_launcher',
     );
 
-    const NotificationDetails notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
+    const NotificationDetails details = NotificationDetails(
+      android: androidDetails,
       iOS: DarwinNotificationDetails(),
     );
 
-    final int notificationId =
-        (DateTime.now().millisecondsSinceEpoch ~/ 1000) % 100000;
-
-    await _notificationsPlugin.show(
-      id: notificationId,
+    await flutterLocalNotificationsPlugin.show(
+      id: 0,
       title: title,
       body: body,
-      notificationDetails: notificationDetails,
+      notificationDetails: details,
     );
   }
 }
